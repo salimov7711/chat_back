@@ -63,6 +63,7 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
+
         $request->validate([
             'email' => 'required|string|email|max:50',
             'password' => 'required|string|min:6',
@@ -72,8 +73,14 @@ class UserController extends Controller
             return response()->json(['message' => 'invalid credentials'], 401);
         }
 
-        $token = $user->createToken('auth_token')->plainTextToken;
+        $token = $user->createToken('auth_token', ['*'], now()->addWeek())->plainTextToken;
         return response()->json(['access_token' => $token, 'user' => $user]);
 
+    }
+
+    public function logout(Request $request)
+    {
+        auth()->user()->tokens()->delete();
+        return response()->json(['message' => 'Logged out']);
     }
 }

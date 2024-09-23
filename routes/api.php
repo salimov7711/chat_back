@@ -8,8 +8,11 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::group(['prefix' => 'auth', 'middleware' => 'auth:sanctum'], function () {
-    Route::post('login', [UserController::class, 'login']);
+
+Route::group(['prefix' => 'auth'], function () {
+    Route::post('/register', [UserController::class, 'store']);
+    Route::post('/login', [UserController::class, 'login']);
+    Route::get('/logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 });
 
 
